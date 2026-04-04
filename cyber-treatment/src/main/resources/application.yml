@@ -26,5 +26,5 @@ mybatis-plus:
       id-type: auto
 
 jwt:
-  secret: medical-platform-secret-key-2026
+  secret: cyber-treatment-secret-key-2026
   expire: 7776000000  # 90? = 90 × 24 × 60 × 60 × 1000
