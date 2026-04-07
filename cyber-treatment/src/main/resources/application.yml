@@ -6,7 +6,7 @@ spring:
     name: cyber-treatment
 
   datasource:
-    url: jdbc:mysql://localhost:3308/cyber-treatment?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3308/cyber_treatment?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,5 +26,5 @@ mybatis-plus:
       id-type: auto
 
 jwt:
-  secret: cyber-treatment-secret-key-2026
-  expire: 7776000000  # 90? = 90 × 24 × 60 × 60 × 1000
+  secret: cyber-treatment-jwt-secret-key-2026
+  expire: 7776000000
