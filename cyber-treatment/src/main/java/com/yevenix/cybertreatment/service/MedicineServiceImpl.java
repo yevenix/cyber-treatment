@@ -51,8 +51,19 @@ public class MedicineServiceImpl implements MedicineService{
         return medicineMapper.selectPage(new Page<>(page, size), wrapper);
     }
 
+    /**
+     * 获取单个药品详情
+     * @return
+     */
     @Override
-    public Medicine detail() {
-        return null;
+    public Medicine getById(Long id) {
+        // 根据药品ID查询药品信息
+        Medicine medicine = medicineMapper.selectById(id);
+        // 检查药名是否存在
+        if (medicine == null) {
+            throw new RuntimeException("药品不存在");
+        }
+        // 返回药品详情
+        return medicine;
     }
 }

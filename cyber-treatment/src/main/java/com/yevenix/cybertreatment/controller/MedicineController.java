@@ -42,13 +42,13 @@ public class MedicineController {
     }
 
     /**
-     * 获取药品详情
+     * 查询单个药品详情
      * GET /api/medicine/detail/1
      * @return
      */
     @GetMapping("/detail/{id}")
     public Result<Medicine> detail(@PathVariable Long id) {
-        Medicine medicine = medicineService.detail();
+        Medicine medicine = medicineService.getById(id);
         return Result.success(medicine);
     }
 }

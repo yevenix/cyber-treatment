@@ -23,8 +23,8 @@ public interface MedicineService {
     Page<Medicine> searchByName(String keyword, Integer page, Integer size);
 
     /**
-     * 获取药品详情
+     * 获取单个药品详情
      * @return
      */
-    Medicine detail();
+    Medicine getById(Long id);
 }
