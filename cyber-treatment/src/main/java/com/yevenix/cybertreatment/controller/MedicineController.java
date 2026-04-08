@@ -15,7 +15,7 @@ public class MedicineController {
 
     /**
      * 根据药店查询药品列表（分页）
-     * GET /api/medicine/listByPharmacy
+     * GET /api/medicine/listByPharmacy?pharmacyId=1&page=1&size=10
      * @return
      */
     @GetMapping("/listByPharmacy")
@@ -29,7 +29,7 @@ public class MedicineController {
 
     /**
      * 搜索药品
-     * GET /api/medicine/search
+     * GET /api/medicine/search?keyword=xxx&page=1&size=10
      * @return
      */
     @GetMapping("/search")
@@ -37,13 +37,13 @@ public class MedicineController {
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Page<Medicine> result = medicineService.search(keyword, page, size);
+        Page<Medicine> result = medicineService.searchByName(keyword, page, size);
         return Result.success(result);
     }
 
     /**
      * 获取药品详情
-     * GET /api/medicine/detail/{id}
+     * GET /api/medicine/detail/1
      * @return
      */
     @GetMapping("/detail/{id}")

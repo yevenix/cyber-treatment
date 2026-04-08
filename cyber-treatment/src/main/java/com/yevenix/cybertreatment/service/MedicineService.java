@@ -14,13 +14,13 @@ public interface MedicineService {
     Page<Medicine> listByPharmacy(Long pharmacyId, Integer page, Integer size);
 
     /**
-     * 搜索药品
+     * 根据药品名称模糊搜索药品列表
      * @param keyword
      * @param page
      * @param size
      * @return
      */
-    Page<Medicine> search(String keyword, Integer page, Integer size);
+    Page<Medicine> searchByName(String keyword, Integer page, Integer size);
 
     /**
      * 获取药品详情
