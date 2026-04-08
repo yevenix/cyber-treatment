@@ -48,10 +48,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(RegisterDTO registerDTO) {
-        // 1.检查手机号是否已存在
-        getUserByPhone(registerDTO.getPhone());
+        // 1.检查手机号是否存在
+        User user = getUserByPhone(registerDTO.getPhone());
+        if (user != null) {
+            throw new RuntimeException("手机号已被注册");
+        }
         // 2.创建新用户
-        User user = new User();
         user.setPhone(registerDTO.getPhone());
         user.setPassword(DigestUtil.md5Hex(registerDTO.getPassword()));
         user.setNickname(registerDTO.getNickname());
