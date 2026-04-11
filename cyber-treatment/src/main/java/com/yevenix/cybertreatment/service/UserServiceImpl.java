@@ -8,6 +8,8 @@ import com.yevenix.cybertreatment.entity.User;
 import com.yevenix.cybertreatment.mapper.UserMapper;
 import com.yevenix.cybertreatment.utils.JwtUtil;
 import com.yevenix.cybertreatment.vo.LoginVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class UserServiceImpl implements UserService{
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException("用户不存在");
         }
         // 3.验证密码是否正确
-        if(!loginDTO.getPassword().equals(user.getPassword())) {
+        if(!DigestUtil.md5Hex(loginDTO.getPassword()).equals(user.getPassword())) {
             throw new RuntimeException("手机号或密码错误");
         }
         // 4.检查账号状态
@@ -43,25 +46,30 @@ public class UserServiceImpl implements UserService{
         loginVO.setToken(token);
         loginVO.setUserId(user.getId());
         loginVO.setNickname(user.getNickname());
+        log.info("用户登录成功,用户ID:{},手机号:{}", user.getId(),user.getPhone());
         return loginVO;
     }
 
     @Override
     public void register(RegisterDTO registerDTO) {
         // 1.检查手机号是否存在
-        User user = getUserByPhone(registerDTO.getPhone());
-        if (user != null) {
+        User existUser = getUserByPhone(registerDTO.getPhone());
+        if (existUser != null) {
             throw new RuntimeException("手机号已被注册");
         }
-        // 2.创建新用户
-        user.setPhone(registerDTO.getPhone());
-        user.setPassword(DigestUtil.md5Hex(registerDTO.getPassword()));
-        user.setNickname(registerDTO.getNickname());
-        user.setBalance(BigDecimal.ZERO);
-        user.setStatus(1);
-        user.setCreateTime(LocalDateTime.now());
-        // 3.保存到数据库
-        userMapper.insert(user);
+        else{
+            // 2.创建新用户
+            User user = new User();
+            user.setPhone(registerDTO.getPhone());
+            user.setPassword(DigestUtil.md5Hex(registerDTO.getPassword()));
+            user.setNickname(registerDTO.getNickname());
+            user.setBalance(BigDecimal.ZERO);
+            user.setStatus(1);
+            user.setCreateTime(LocalDateTime.now());
+            // 3.保存到数据库
+            userMapper.insert(user);
+            log.info("用户注册成功,用户ID:{},手机号:{}", user.getId(),user.getPhone());
+        }
     }
 
     // 根据手机号查询用户
