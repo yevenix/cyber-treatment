@@ -2,6 +2,7 @@ package com.yevenix.cybertreatment.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yevenix.cybertreatment.dto.CartAddDTO;
 import com.yevenix.cybertreatment.entity.Cart;
 import com.yevenix.cybertreatment.entity.Medicine;
 import com.yevenix.cybertreatment.mapper.CartMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +57,36 @@ public class CartServiceImpl implements CartService {
             }
         }
         return result;
+    }
+
+    /**
+     * 添加药品到购物车
+     * @param cartAddDTO
+     * @param userId
+     */
+    @Override
+    public void add(CartAddDTO cartAddDTO, Long userId) {
+        // 检查该药品是否已在购物车
+        LambdaQueryWrapper<Cart> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Cart::getUserId, userId)
+                .eq(Cart::getMedicineId, cartAddDTO.getMedicineId());
+        Cart existCart = cartMapper.selectOne(wrapper);
+        System.out.println(existCart);
+        // 检查购物车是否存在该药品
+        if (existCart != null) {
+            // 存在：更新购物车中该药品数量
+            existCart.setQuantity(existCart.getQuantity() + cartAddDTO.getQuantity());
+            cartMapper.updateById(existCart);
+        }
+        else{
+            // 不存在：添加该药品到购物车
+            Cart cart = new Cart();
+            cart.setUserId(userId);
+            cart.setMedicineId(cartAddDTO.getMedicineId());
+            cart.setQuantity(cartAddDTO.getQuantity());
+            cart.setCreateTime(LocalDateTime.now());
+            cart.setUpdateTime(LocalDateTime.now());
+            cartMapper.insert(cart);
+        }
     }
 }
