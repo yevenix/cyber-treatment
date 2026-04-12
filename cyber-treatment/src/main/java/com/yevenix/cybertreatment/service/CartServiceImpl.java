@@ -3,15 +3,11 @@ package com.yevenix.cybertreatment.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yevenix.cybertreatment.dto.CartAddDTO;
-import com.yevenix.cybertreatment.dto.CartUpdateDTO;
 import com.yevenix.cybertreatment.entity.Cart;
 import com.yevenix.cybertreatment.entity.Medicine;
 import com.yevenix.cybertreatment.mapper.CartMapper;
 import com.yevenix.cybertreatment.mapper.MedicineMapper;
 import com.yevenix.cybertreatment.vo.CartVO;
-import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +18,6 @@ import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
     @Autowired
     private CartMapper cartMapper;
     @Autowired
@@ -92,48 +87,6 @@ public class CartServiceImpl implements CartService {
             cart.setCreateTime(LocalDateTime.now());
             cart.setUpdateTime(LocalDateTime.now());
             cartMapper.insert(cart);
-
-            log.info("添加成功,购物车:{}", cart);
         }
-    }
-
-    /**
-     * 更新购物车中某个药品数量
-     * @param cartUpdateDTO
-     * @param userId
-     */
-    @Override
-    public void update(CartUpdateDTO cartUpdateDTO, Long userId) {
-        // 根据购物车ID查询药品记录
-        Cart cart = cartMapper.selectById(cartUpdateDTO.getCartId());
-        // 检查购物车中有无该药品
-        if (cart == null) {
-            throw new RuntimeException("购物车中没有该药品");
-        }
-        // 检查用户是否有权限修改该购物车
-        if (!cart.getUserId().equals(userId)) {
-            throw new RuntimeException("无权操作");
-        }
-        // 检查数量是否合法
-        if (cartUpdateDTO.getQuantity() < 1) {
-            throw new RuntimeException("数量不能小于1");
-        }
-        if (cartUpdateDTO.getQuantity() > 999) {
-            throw new RuntimeException("数量不能大于999");
-        }
-        // 检查药品库存是否充足
-        Medicine medicine = medicineMapper.selectById(cart.getMedicineId());
-        if (medicine == null || medicine.getStatus() == 0) {
-            throw new RuntimeException("药品已下架");
-        }else if (medicine.getStock() < cartUpdateDTO.getQuantity()) {
-            throw new RuntimeException("库存不足，当前库存：" + medicine.getStock());
-        }
-        // 记录购物车中该药品原先的数量
-        Integer previousQuantity = cart.getQuantity();
-        // 更新数量
-        cart.setQuantity(cartUpdateDTO.getQuantity());
-        cartMapper.updateById(cart);
-
-        log.info("更新成功,用户:{},购物车ID:{},数量:{} -> {}", userId, cart.getId(), previousQuantity, cart.getQuantity());
     }
 }
