@@ -3,6 +3,7 @@ package com.yevenix.cybertreatment.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yevenix.cybertreatment.common.Result;
 import com.yevenix.cybertreatment.dto.CartAddDTO;
+import com.yevenix.cybertreatment.dto.CartUpdateDTO;
 import com.yevenix.cybertreatment.service.CartService;
 import com.yevenix.cybertreatment.utils.JwtUtil;
 import com.yevenix.cybertreatment.vo.CartVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/carts")
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -21,7 +22,7 @@ public class CartController {
 
     /**
      * 获取购物车列表
-     * GET /api/cart/list
+     * GET /api/carts/list
      * @return
      */
     @GetMapping("/list")
@@ -33,7 +34,7 @@ public class CartController {
 
     /**
      * 添加药品到购物车
-     * POST /api/cart/add
+     * POST /api/carts/add
      * @return
      */
     @PostMapping("/add")
@@ -42,7 +43,18 @@ public class CartController {
         cartService.add(cartAddDTO, userId);
         return Result.success(null);
     }
-    // 更新购物车药品数量
+
+    /**
+     * 更新购物车中某个药品数量
+     * PUT /api/carts/updateQuantity
+     * @return
+     */
+    @PutMapping("/updateQuantity")
+    public Result<Void> updateQuantity(@RequestBody CartUpdateDTO cartUpdateDTO, @RequestHeader("token") String token) {
+        Long userId = jwtUtil.getUserId(token);
+        cartService.update(cartUpdateDTO, userId);
+        return Result.success("更新成功",null);
+    }
     // 删除购物车药品
     // 清空购物车
     // 获取购物车药品数量

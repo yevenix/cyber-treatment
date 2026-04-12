@@ -2,6 +2,7 @@ package com.yevenix.cybertreatment.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yevenix.cybertreatment.dto.CartAddDTO;
+import com.yevenix.cybertreatment.dto.CartUpdateDTO;
 import com.yevenix.cybertreatment.vo.CartVO;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface CartService {
      * @param userId
      */
     void add(CartAddDTO cartDTO, Long userId);
+
+    void update(CartUpdateDTO cartUpdateDTO, Long userId);
 }
