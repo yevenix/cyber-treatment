@@ -67,6 +67,17 @@ public class CartController {
         cartService.delete(cartId, userId);
         return Result.success("删除成功",null);
     }
-    // 清空购物车
+
+    /**
+     * 清空购物车
+     * DELETE /api/carts
+     * @return
+     */
+    @DeleteMapping
+    public Result<Void> clear(@RequestHeader("token") String token) {
+        Long userId = jwtUtil.getUserId(token);
+        cartService.clear(userId);
+        return Result.success("清空成功",null);
+    }
     // 获取购物车药品数量
 }

@@ -156,4 +156,17 @@ public class CartServiceImpl implements CartService {
         log.info("删除成功,用户ID:{},购物车ID:{}", userId, cart.getId());
     }
 
+    /**
+     * 清空购物车
+     * @param userId
+     */
+    @Override
+    public void clear(Long userId) {
+        // 查询用户关联的购物车列表
+        LambdaQueryWrapper<Cart> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Cart::getUserId, userId);
+        // 删除购物车列表中所有药品
+        cartMapper.delete(wrapper);
+        log.info("清空成功,用户ID:{}", userId);
+    }
 }

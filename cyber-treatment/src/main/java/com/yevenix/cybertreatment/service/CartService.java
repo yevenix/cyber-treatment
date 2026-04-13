@@ -35,4 +35,10 @@ public interface CartService {
      * @param userId
      */
     void delete(long cartId, Long userId);
+
+    /**
+     * 清空购物车
+     * @param userId
+     */
+    void clear(Long userId);
 }
