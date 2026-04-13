@@ -169,4 +169,18 @@ public class CartServiceImpl implements CartService {
         cartMapper.delete(wrapper);
         log.info("清空成功,用户ID:{}", userId);
     }
+
+    /**
+     * 获取购物车药品种类数
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer count(Long userId) {
+        LambdaQueryWrapper<Cart> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Cart::getUserId, userId);
+        Long count = cartMapper.selectCount(wrapper);
+        log.info("获取购物车药品种类数量,用户ID:{}, 购物车药品种类数量:{}", userId, count);
+        return count.intValue();
+    }
 }

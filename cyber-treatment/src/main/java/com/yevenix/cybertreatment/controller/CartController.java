@@ -79,5 +79,16 @@ public class CartController {
         cartService.clear(userId);
         return Result.success("清空成功",null);
     }
-    // 获取购物车药品数量
+
+    /**
+     * 获取购物车药品种类数
+     * GET /api/carts/count
+     * @return
+     */
+    @GetMapping("/count")
+    public Result<Integer> count(@RequestHeader("token") String token) {
+        Long userId = jwtUtil.getUserId(token);
+        Integer count = cartService.count(userId);
+        return Result.success(count);
+    }
 }

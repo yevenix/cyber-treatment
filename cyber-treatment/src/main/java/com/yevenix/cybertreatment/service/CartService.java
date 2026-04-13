@@ -41,4 +41,11 @@ public interface CartService {
      * @param userId
      */
     void clear(Long userId);
+
+    /**
+     * 获取购物车药品种类数
+     * @param userId
+     * @return
+     */
+    Integer count(Long userId);
 }
