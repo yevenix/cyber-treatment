@@ -135,4 +135,25 @@ public class CartServiceImpl implements CartService {
         log.info("更新成功,用户:{},购物车ID:{},数量:{} -> {}", userId, cart.getId(), previousQuantity, cart.getQuantity());
     }
 
+    /**
+     * 删除购物车药品
+     * @param cartId
+     * @param userId
+     */
+    @Override
+    public void delete(long cartId, Long userId) {
+        // 检查购物车中是否有该药品
+        Cart cart = cartMapper.selectById(cartId);
+        if (cart == null) {
+            throw new RuntimeException("购物车中不存在该药品");
+        }
+        // 检查用户是否有权限删除该药品
+        if (!cart.getUserId().equals(userId)){
+            throw new RuntimeException("无权操作");
+        }
+        // 删除
+        cartMapper.deleteById(cartId);
+        log.info("删除成功,用户ID:{},购物车ID:{}", userId, cart.getId());
+    }
+
 }

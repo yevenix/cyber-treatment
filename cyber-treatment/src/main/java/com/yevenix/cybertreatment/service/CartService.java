@@ -22,5 +22,17 @@ public interface CartService {
      */
     void add(CartAddDTO cartDTO, Long userId);
 
+    /**
+     * 更新购物车中某个药品数量
+     * @param cartUpdateDTO
+     * @param userId
+     */
     void update(CartUpdateDTO cartUpdateDTO, Long userId);
+
+    /**
+     * 删除购物车中的药品
+     * @param cartId
+     * @param userId
+     */
+    void delete(long cartId, Long userId);
 }

@@ -55,7 +55,18 @@ public class CartController {
         cartService.update(cartUpdateDTO, userId);
         return Result.success("更新成功",null);
     }
-    // 删除购物车药品
+
+    /**
+     * 删除购物车中的药品
+     * DELETE /api/carts/1
+     * @return
+     */
+    @DeleteMapping("/{cartId}")
+    public Result<Void> delete(@PathVariable Long cartId, @RequestHeader("token") String token) {
+        Long userId = jwtUtil.getUserId(token);
+        cartService.delete(cartId, userId);
+        return Result.success("删除成功",null);
+    }
     // 清空购物车
     // 获取购物车药品数量
 }
